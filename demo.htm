@@ -1,0 +1,64 @@
+<html>
+<body>
+<button id=run>Run</button><br>
+<input id=iso placeholder="iso file, if any"></input><br>
+<textarea cols=100 rows=10 id=raw>default arl
+timeout 100
+ontimeout arl
+f1 f1.msg
+ui menu.c32
+
+menu title AVG Rescue CD GNU/Linux Boot Menu
+menu vshift 3
+menu tabmsg Press [Tab] to edit options. Press [F1] for help.
+
+label arl
+	menu label AVG Rescue CD
+	menu default
+	kernel vmlinuz
+	append max_loop=255 vga=791 initrd=initrd.lzm init=linuxrc reboot=bios
+
+label nofb
+	menu label AVG Rescue CD with Disabled Framebuffer
+	kernel vmlinuz
+	append max_loop=255 video=vesafb:off initrd=initrd.lzm init=linuxrc reboot=bios
+
+label vgask
+	menu label AVG Rescue CD with Resolution Selection
+	kernel vmlinuz
+	append max_loop=255 initrd=initrd.lzm init=linuxrc vga=ask reboot=bios
+
+label floppy
+	menu label Boot from floppy disk
+	localboot 0x00
+
+label disk
+	menu label Boot from hard disk
+	localboot 0x80
+
+label next
+	menu label Boot from next device in the BIOS boot sequence
+	localboot -1
+
+label memtest
+	menu label Memtest86+ - Advanced Memory Diagnostic Tool
+	kernel memtest
+
+label
+	menu label Exit to the syslinux boot prompt
+	menu quit
+
+</textarea><br>
+<textarea cols=100 rows=10 id=result></textarea><br>
+<script src="isolinux-to-grub4dos.js"> </script>
+<script>
+window.onload=function(){
+	$("run").onclick=function(){ $("result").value=buildmenu($("raw").value.parseisolinux(),$("iso").value)};
+	$("run").click();
+}
+$=function(id){
+return document.getElementById(id);
+}
+</script>
+</body>
+</html>
